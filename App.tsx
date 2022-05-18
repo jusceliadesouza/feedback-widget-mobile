@@ -1,8 +1,10 @@
 import 'react-native-gesture-handler';
 
+import { useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
-import AppLoading from 'expo-app-loading';
+
+import * as SplashScreen from 'expo-splash-screen'
 
 import {
   useFonts,
@@ -18,8 +20,21 @@ export default function App() {
     Inter_400Regular, Inter_500Medium
   });
 
+  useEffect(() => {
+    async function lockInSplashScreen() {
+      if (!fontsLoaded) {
+        await SplashScreen.preventAutoHideAsync();
+        return;
+      }
+
+      await SplashScreen.hideAsync();
+    }
+
+    lockInSplashScreen();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return null
   }
 
   return (
@@ -32,10 +47,8 @@ export default function App() {
         backgroundColor='transparent'
         translucent
       />
-      
+
       <Widget />
     </View>
-
-
   );
 }
